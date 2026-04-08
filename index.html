@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link rel="stylesheet" href="css/leaflet.css">
@@ -61,6 +61,7 @@
         .description {
             flex: 1 1 320px;
             min-width: 280px;
+            max-width: 100%;
             background-color: white;
             padding: 20px;
             border-radius: 12px;
@@ -71,7 +72,8 @@
         }
         #map {
             flex: 2 1 420px;
-            min-width: 300px;
+            width: 100%;
+            min-width: 0;
             min-height: 520px;
             height: min(65vh, 700px);
             border: 2px solid #3498db;
@@ -105,7 +107,8 @@
             .description,
             #map {
                 width: 100%;
-                min-width: auto;
+                min-width: 0;
+                max-width: 100%;
             }
             #map {
                 height: 50vh;
@@ -120,6 +123,10 @@
             }
             .header p {
                 font-size: 0.9rem;
+            }
+            .container {
+                padding: 12px 10px;
+                gap: 14px;
             }
             #map {
                 height: 45vh;
@@ -186,6 +193,17 @@
         }).fitBounds([[0.43291185597309034,124.35544131761323],[0.48278403713622287,124.41274012100905]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        function refreshMap() {
+            if (map) {
+                map.invalidateSize();
+            }
+        }
+        window.addEventListener('resize', function() {
+            setTimeout(refreshMap, 150);
+        });
+        window.addEventListener('orientationchange', function() {
+            setTimeout(refreshMap, 300);
+        });
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
         // remove popup's row if "visible-with-data"
         function removeEmptyRowsFromPopupContent(content, feature) {
